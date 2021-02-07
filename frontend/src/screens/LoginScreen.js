@@ -1,30 +1,47 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { Avatar, Button, Paper, TextField, Typography, Container } from '@material-ui/core';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Button, Paper, TextField, Typography, Container, CircularProgress } from '@material-ui/core';
 import Icon from './icon';
+import Message from '../components/Message'
+import { login } from '../actions/userActions'
 
 import { GoogleLogin } from 'react-google-login';
 
-const LoginScreen = () =>
+const LoginScreen = ({ location, history }) =>
 {
-    const submitHandler = () =>
-    {
-        console.log('Submited!')
-    }
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
 
-    const clear = () =>
+    const dispatch = useDispatch()
+
+    const userLogin = useSelector((state) => state.userLogin)
+    const { loading, error, userInfo } = userLogin
+
+    const redirect = location.search ? location.search.split('=')[1] : '/'
+
+    useEffect(() =>
     {
-        console.group('Clear ')
+        if (userInfo) {
+            history.push(redirect)
+        }
+    }, [history, userInfo, redirect])
+
+    const submitHandler = (e) =>
+    {
+        e.preventDefault()
+        dispatch(login(email, password))
     }
 
     return (
-        <Container maxWidth="sm" style={{ marginTop: 100 }}>
+        <Container maxWidth="sm" style={{ textAlign: 'center', marginTop: 100 }}>
             <Paper>
+                <Typography variant="h5" className="py-2">Login</Typography>
+                {error && <Message variant='danger'>{error}</Message>}
+                {loading && <CircularProgress />}
                 <form style={{ textAlign: 'center', paddingTop: 20, paddingBottom: 20 }} autoComplete="off" noValidate onSubmit={submitHandler}>
-                    <Typography variant="h5">Login</Typography>
-                    <TextField style={{ margin: '2%', width: '96%' }} name="email" variant="outlined" label="Email" fullWidth />
-                    <TextField style={{ margin: '2%', width: '96%' }} name="password" variant="outlined" label="Password" fullWidth />
-                    <Button style={{ margin: '2%', width: '96%' }} variant="contained" color="primary" size="large" onClick={clear} fullWidth>Submit</Button>
+                    <TextField style={{ margin: '2%', width: '96%' }} name="email" variant="outlined" label="Email" type="email" fullWidth value={email} onChange={(e) => setEmail(e.target.value)} />
+                    <TextField style={{ margin: '2%', width: '96%' }} name="password" variant="outlined" label="Password" type="password" fullWidth value={password} onChange={(e) => setPassword(e.target.value)} />
+                    <Button style={{ margin: '2%', width: '96%' }} variant="contained" color="primary" size="large" onClick={submitHandler} fullWidth>Submit</Button>
                     <GoogleLogin
                         clientId=""
                         render={(renderProps) => (

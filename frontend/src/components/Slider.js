@@ -5,7 +5,7 @@ const Slider = () =>
 {
     return (
         <div style={{ width: '100%', padding: 0, height: 'auto', margin: 0, marginBottom: 0 }}>
-            <Carousel style={{ margin: 0, display: 'flex', justifyContent: 'center', width: '100%', alignItems: 'center', marginBottom: '10px', marginBottom: 0 }}>
+            <Carousel style={{ margin: 0, display: 'flex', justifyContent: 'center', width: '100%', alignItems: 'center', marginBottom: 0 }}>
                 <Carousel.Item>
                     <div style={{ display: 'flex', justifyContent: 'center', width: '100%', height: 300 }} >
                         <img

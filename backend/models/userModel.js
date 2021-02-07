@@ -9,6 +9,7 @@ const userSchema = mongoose.Schema(
         },
         email: {
             type: String,
+            required: true,
             unique: true,
         },
         password: {
@@ -17,18 +18,19 @@ const userSchema = mongoose.Schema(
         photo: {
             type: String,
         },
-        businessName: {
-            type: String
-        },
         address: {
             type: String
         },
         documents: {
             type: [String]
         },
-        role: {
-            type: String,
-            required: true,
+        verified: {
+            type: Boolean,
+            default: false
+        },
+        isAdmin: {
+            type: Boolean,
+            default: false
         },
     },
     {

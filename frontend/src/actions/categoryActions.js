@@ -2,42 +2,40 @@ import axios from 'axios'
 
 import
 {
-    SHOP_LIST_REQUEST,
-    SHOP_LIST_SUCCESS,
-    SHOP_LIST_FAIL,
-    SHOP_DETAILS_REQUEST,
-    SHOP_DETAILS_SUCCESS,
-    SHOP_DETAILS_FAIL,
-    SHOP_DELETE_REQUEST,
-    SHOP_DELETE_SUCCESS,
-    SHOP_DELETE_FAIL,
-    SHOP_CREATE_FAIL,
-    SHOP_CREATE_SUCCESS,
-    SHOP_CREATE_REQUEST,
-    SHOP_UPDATE_REQUEST,
-    SHOP_UPDATE_SUCCESS,
-    SHOP_UPDATE_FAIL,
-} from '../constants/shopConstants'
+    CATEGORY_LIST_REQUEST,
+    CATEGORY_LIST_SUCCESS,
+    CATEGORY_LIST_FAIL,
+    CATEGORY_DETAILS_REQUEST,
+    CATEGORY_DETAILS_SUCCESS,
+    CATEGORY_DETAILS_FAIL,
+    CATEGORY_DELETE_REQUEST,
+    CATEGORY_DELETE_SUCCESS,
+    CATEGORY_DELETE_FAIL,
+    CATEGORY_CREATE_FAIL,
+    CATEGORY_CREATE_SUCCESS,
+    CATEGORY_CREATE_REQUEST,
+    CATEGORY_UPDATE_REQUEST,
+    CATEGORY_UPDATE_SUCCESS,
+    CATEGORY_UPDATE_FAIL,
+} from '../constants/categoryConstants'
 import { logout } from './userActions'
 
-
-
-export const listShops = async (dispatch) =>
+export const listCategorys = async (dispatch) =>
 {
     try {
-        dispatch({ type: SHOP_LIST_REQUEST })
+        dispatch({ type: CATEGORY_LIST_REQUEST })
 
         const { data } = await axios.get(
-            '/api/shops'
+            '/api/categorys'
         )
 
         dispatch({
-            type: SHOP_LIST_SUCCESS,
+            type: CATEGORY_LIST_SUCCESS,
             payload: data,
         })
     } catch (error) {
         dispatch({
-            type: SHOP_LIST_FAIL,
+            type: CATEGORY_LIST_FAIL,
             payload:
                 error.response && error.response.data.message
                     ? error.response.data.message
@@ -46,20 +44,20 @@ export const listShops = async (dispatch) =>
     }
 }
 
-export const listShopDetails = (id) => async (dispatch) =>
+export const listCategoryDetails = (id) => async (dispatch) =>
 {
     try {
-        dispatch({ type: SHOP_DETAILS_REQUEST })
+        dispatch({ type: CATEGORY_DETAILS_REQUEST })
 
-        const { data } = await axios.get(`/api/shops/${id}`)
+        const { data } = await axios.get(`/api/categorys/${id}`)
 
         dispatch({
-            type: SHOP_DETAILS_SUCCESS,
+            type: CATEGORY_DETAILS_SUCCESS,
             payload: data,
         })
     } catch (error) {
         dispatch({
-            type: SHOP_DETAILS_FAIL,
+            type: CATEGORY_DETAILS_FAIL,
             payload:
                 error.response && error.response.data.message
                     ? error.response.data.message
@@ -68,11 +66,11 @@ export const listShopDetails = (id) => async (dispatch) =>
     }
 }
 
-export const deleteShop = (id) => async (dispatch, getState) =>
+export const deleteCategory = (id) => async (dispatch, getState) =>
 {
     try {
         dispatch({
-            type: SHOP_DELETE_REQUEST,
+            type: CATEGORY_DELETE_REQUEST,
         })
 
         const {
@@ -85,10 +83,10 @@ export const deleteShop = (id) => async (dispatch, getState) =>
             },
         }
 
-        await axios.delete(`/api/shops/${id}`, config)
+        await axios.delete(`/api/categorys/${id}`, config)
 
         dispatch({
-            type: SHOP_DELETE_SUCCESS,
+            type: CATEGORY_DELETE_SUCCESS,
         })
     } catch (error) {
         const message =
@@ -99,17 +97,18 @@ export const deleteShop = (id) => async (dispatch, getState) =>
             dispatch(logout())
         }
         dispatch({
-            type: SHOP_DELETE_FAIL,
+            type: CATEGORY_DELETE_FAIL,
             payload: message,
         })
     }
 }
 
-export const createShop = () => async (dispatch, getState) =>
+
+export const createCategory = () => async (dispatch, getState) =>
 {
     try {
         dispatch({
-            type: SHOP_CREATE_REQUEST,
+            type: CATEGORY_CREATE_REQUEST,
         })
 
         const {
@@ -122,10 +121,10 @@ export const createShop = () => async (dispatch, getState) =>
             },
         }
 
-        const { data } = await axios.post(`/api/shops`, {}, config)
+        const { data } = await axios.post(`/api/categorys`, {}, config)
 
         dispatch({
-            type: SHOP_CREATE_SUCCESS,
+            type: CATEGORY_CREATE_SUCCESS,
             payload: data,
         })
     } catch (error) {
@@ -137,17 +136,18 @@ export const createShop = () => async (dispatch, getState) =>
             dispatch(logout())
         }
         dispatch({
-            type: SHOP_CREATE_FAIL,
+            type: CATEGORY_CREATE_FAIL,
             payload: message,
         })
     }
 }
 
-export const updateShop = (shop) => async (dispatch, getState) =>
+
+export const updateCategory = (category) => async (dispatch, getState) =>
 {
     try {
         dispatch({
-            type: SHOP_UPDATE_REQUEST,
+            type: CATEGORY_UPDATE_REQUEST,
         })
 
         const {
@@ -162,16 +162,16 @@ export const updateShop = (shop) => async (dispatch, getState) =>
         }
 
         const { data } = await axios.put(
-            `/api/shops/${shop._id}`,
-            shop,
+            `/api/categorys/${category._id}`,
+            category,
             config
         )
 
         dispatch({
-            type: SHOP_UPDATE_SUCCESS,
+            type: CATEGORY_UPDATE_SUCCESS,
             payload: data,
         })
-        dispatch({ type: SHOP_DETAILS_SUCCESS, payload: data })
+        dispatch({ type: CATEGORY_DETAILS_SUCCESS, payload: data })
     } catch (error) {
         const message =
             error.response && error.response.data.message
@@ -181,7 +181,7 @@ export const updateShop = (shop) => async (dispatch, getState) =>
             dispatch(logout())
         }
         dispatch({
-            type: SHOP_UPDATE_FAIL,
+            type: CATEGORY_UPDATE_FAIL,
             payload: message,
         })
     }

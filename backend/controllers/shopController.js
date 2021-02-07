@@ -46,14 +46,14 @@ const deleteShop = asyncHandler(async (req, res) =>
 // @access  Private
 const createShop = asyncHandler(async (req, res) =>
 {
-    const shop = new Product({
+    const shop = new Shop({
         name: 'Sample name',
-        user: req.user._id,
+        image: 'fgh',
         description: 'Sample description',
     })
 
     const createdShop = await shop.save()
-    res.status(201).json(createShop)
+    res.status(201).json(createdShop)
 })
 
 // @desc    Update a shop

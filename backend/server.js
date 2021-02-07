@@ -6,6 +6,7 @@ import connectDB from './config/db.js'
 
 import shopRoutes from './routes/shopRoutes.js'
 import userRoutes from './routes/userRoutes.js'
+import categoryRoutes from './routes/categoryRoutes.js'
 
 dotenv.config()
 
@@ -17,6 +18,7 @@ app.use(express.json())
 
 app.use('/api/shops', shopRoutes)
 app.use('/api/users', userRoutes)
+app.use('/api/categorys', categoryRoutes)
 
 const __dirname = path.resolve()
 if (process.env.NODE_ENV === 'production') {
