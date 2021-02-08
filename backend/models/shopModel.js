@@ -9,15 +9,18 @@ const shopSchema = mongoose.Schema(
           },*/
         name: {
             type: String,
-            required: true,
         },
         image: {
             type: String,
-            required: true,
+        },
+        category: {
+            type: String,
+        },
+        address: {
+            type: String,
         },
         description: {
             type: String,
-            required: true,
         },
     },
     {

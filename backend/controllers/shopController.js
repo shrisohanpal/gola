@@ -47,9 +47,11 @@ const deleteShop = asyncHandler(async (req, res) =>
 const createShop = asyncHandler(async (req, res) =>
 {
     const shop = new Shop({
-        name: 'Sample name',
-        image: 'fgh',
-        description: 'Sample description',
+        name: '',
+        image: '/uploads/default.png',
+        category: '',
+        address: '',
+        description: '',
     })
 
     const createdShop = await shop.save()
@@ -63,16 +65,20 @@ const updateShop = asyncHandler(async (req, res) =>
 {
     const {
         name,
+        image,
+        category,
+        address,
         description,
-        image
     } = req.body
 
     const shop = await Shop.findById(req.params.id)
 
     if (shop) {
         shop.name = name
-        shop.description = description
         shop.image = image
+        shop.category = category
+        shop.address = address
+        shop.description = description
 
         const updatedShop = await shop.save()
         res.json(updatedShop)

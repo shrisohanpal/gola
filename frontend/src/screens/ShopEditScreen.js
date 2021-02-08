@@ -1,9 +1,14 @@
+import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { Form } from 'react-bootstrap'
 import { Container, Button, Typography, Paper, TextField, InputLabel, FormControl, Select, MenuItem } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { listCategorys } from '../actions/categoryActions'
+
+import { updateShop, listShopDetails, deleteShop } from '../actions/shopActions'
+import { SHOP_UPDATE_RESET, SHOP_DELETE_RESET } from '../constants/shopConstants'
 
 const useStyles = makeStyles((theme) =>
 ({
@@ -29,9 +34,11 @@ const ShopEditScreen = ({ match, history }) =>
     const shopId = match.params.id
 
     const [name, setName] = useState('')
-    const [image, setImage] = useState('')
+    const [image, setImage] = useState('/uploads/default.png')
     const [category, setCategory] = useState('')
+    const [address, setAddress] = useState('')
     const [description, setDescription] = useState('')
+    const [location, setLocation] = useState('')
     const [uploading, setUploading] = useState(false)
 
     const dispatch = useDispatch()
@@ -49,31 +56,96 @@ const ShopEditScreen = ({ match, history }) =>
         success: successUpdate,
     } = shopUpdate
 
+    const shopDelete = useSelector((state) => state.shopDelete)
+    const {
+        loading: loadingDelete,
+        error: errorDelete,
+        success: successDelete,
+    } = shopDelete
 
     const classes = useStyles()
 
-    const submitHandler = () =>
+    const uploadFileHandler = async (e) =>
     {
-        console.log('Submited!')
+        const file = e.target.files[0]
+        console.log(file)
+        const formData = new FormData()
+        formData.append('image', file)
+        setUploading(true)
+
+        try {
+            const config = {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            }
+
+            const { data } = await axios.post('/api/upload', formData, config)
+
+            setImage(data)
+            setUploading(false)
+        } catch (error) {
+            console.error(error)
+            setUploading(false)
+        }
     }
 
-    const clear = () =>
+    const submitHandler = (e) =>
     {
-        console.group('Clear ')
+        e.preventDefault()
+        dispatch(
+            updateShop({
+                _id: shopId,
+                name,
+                image,
+                category,
+                address,
+                description,
+            })
+        )
+    }
+
+    const deleteHandler = (id) =>
+    {
+        if (window.confirm('Are you sure')) {
+            dispatch(deleteShop(id))
+        }
     }
 
 
     useEffect(() =>
     {
+        if (successUpdate || successDelete) {
+            dispatch({ type: SHOP_UPDATE_RESET })
+            dispatch({ type: 'SHOP_DELETE_RESET' })
+            history.push('/')
+        } else {
+            if (!shop) {
+                dispatch(listShopDetails(shopId))
+            } else {
+                setName(shop.name)
+                setImage(shop.image)
+                setCategory(shop.category)
+                setAddress(shop.address)
+                setDescription(shop.description)
+            }
+        }
+
         dispatch(listCategorys)
-    }, [dispatch])
+    }, [dispatch, history, shopId, shop, successUpdate])
 
     return (
         <Container maxWidth="sm" style={{ marginTop: 100 }}>
             <Paper>
                 <form style={{ textAlign: 'center', paddingTop: 20 }} autoComplete="off" noValidate onSubmit={submitHandler}>
                     <Typography variant="h5">Edit Shop</Typography>
-                    <TextField className={classes.textField} name="shopName" variant="outlined" label="Shop Name" fullWidth />
+                    <div>
+                        <img className={classes.textField} src={image} />
+                    </div>
+                    <input type="file"
+                        onChange={uploadFileHandler}
+                    ></input>
+                    <TextField className={classes.textField} name="shopName" variant="outlined" label="Shop Name" value={name} onChange={(e) => setName(e.target.value)} fullWidth />
                     <FormControl variant="outlined" className={classes.formControl}>
                         <InputLabel id="category-select-outlined-label">Select Category</InputLabel>
                         <Select
@@ -90,10 +162,10 @@ const ShopEditScreen = ({ match, history }) =>
                             )}
                         </Select>
                     </FormControl>
-                    <TextField className={classes.textField} name="address" variant="outlined" label="Address" fullWidth multiline rows={3} />
-                    <TextField className={classes.textField} name="description" variant="outlined" label="Description" fullWidth multiline rows={5} />
-                    <Button className={classes.button} variant="contained" color="primary" size="large" onClick={submitHandler} fullWidth>Submit</Button>
-                    <Button className={classes.button} variant="contained" color="secondary" size="small" onClick={clear} fullWidth>Remove Shop</Button>
+                    <TextField className={classes.textField} name="address" variant="outlined" label="Address" fullWidth multiline rows={3} value={address} onChange={(e) => setAddress(e.target.value)} />
+                    <TextField className={classes.textField} name="description" variant="outlined" label="Description" fullWidth multiline rows={5} value={description} onChange={(e) => setDescription(e.target.value)} />
+                    <Button className={classes.button} variant="contained" color="primary" size="large" type="submit" fullWidth>Submit</Button>
+                    <Button className={classes.button} variant="contained" color="secondary" size="small" onClick={() => deleteHandler(shopId)} fullWidth>Remove Shop</Button>
                 </form>
             </Paper>
         </Container>
