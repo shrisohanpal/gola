@@ -109,15 +109,15 @@ const ShopEditScreen = ({ match, history }) =>
     {
         if (window.confirm('Are you sure')) {
             dispatch(deleteShop(id))
+            history.push('/')
         }
     }
 
 
     useEffect(() =>
     {
-        if (successUpdate || successDelete) {
+        if (successUpdate) {
             dispatch({ type: SHOP_UPDATE_RESET })
-            dispatch({ type: 'SHOP_DELETE_RESET' })
             history.push('/')
         } else {
             if (!shop) {

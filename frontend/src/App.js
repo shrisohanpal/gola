@@ -4,6 +4,8 @@ import { BrowserRouter as Router, Route } from 'react-router-dom'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import HomeScreen from './screens/HomeScreen'
+import ContactScreen from './screens/ContactScreen'
+import AboutUsScreen from './screens/AboutUsScreen'
 import LoginScreen from './screens/LoginScreen'
 import RegisterScreen from './screens/RegisterScreen'
 import ProfileScreen from './screens/ProfileScreen'
@@ -24,6 +26,8 @@ const App = () =>
       <Header />
       <main style={{ marginTop: 50 }}>
         <Route path='/' component={HomeScreen} exact />
+        <Route path='/contact' component={ContactScreen} />
+        <Route path='/aboutus' component={AboutUsScreen} />
         <Route path='/login' component={LoginScreen} />
         <Route path='/register' component={RegisterScreen} />
         <Route path='/profile' component={ProfileScreen} />
